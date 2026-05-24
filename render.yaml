@@ -2,6 +2,7 @@ services:
   - type: web
     name: dds-task-tracker
     runtime: python
+    plan: free
     buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
     startCommand: "gunicorn task_tracker.wsgi --log-file -"
     envVars:
