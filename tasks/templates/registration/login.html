@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - DDS Task Tracker</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="login-bg">
+
+    <div class="login-card shadow">
+        <div class="text-center mb-4">
+            <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-25 rounded-circle p-3 mb-3">
+                <i class="bi bi-layers-half fs-1 text-primary"></i>
+            </div>
+            <h3 class="fw-bold mb-1">DDS Task Tracker</h3>
+            <p class="text-muted small">Centralized Operational Tracking System</p>
+        </div>
+
+        {% if form.errors %}
+            <div class="alert alert-danger py-2 small mb-3 border-0 bg-danger bg-opacity-25 text-white" role="alert">
+                <i class="bi bi-exclamation-octagon me-1"></i> Invalid username or password.
+            </div>
+        {% endif %}
+
+        {% if next %}
+            <div class="alert alert-info py-2 small mb-3 border-0 bg-info bg-opacity-25 text-white" role="alert">
+                <i class="bi bi-info-circle me-1"></i> Please log in to access this page.
+            </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+            
+            <div class="mb-3">
+                <label for="id_username" class="form-label small fw-semibold text-white text-opacity-75">Username</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-end-0 text-white text-opacity-50"><i class="bi bi-person"></i></span>
+                    <input type="text" name="username" autofocus maxlength="150" required id="id_username" class="form-control border-start-0 ps-0" placeholder="Enter username">
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <label for="id_password" class="form-label small fw-semibold text-white text-opacity-75">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-end-0 text-white text-opacity-50"><i class="bi bi-lock"></i></span>
+                    <input type="password" name="password" required id="id_password" class="form-control border-start-0 ps-0" placeholder="Enter password">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2.5 d-flex align-items-center justify-content-center gap-2">
+                <span>Sign In</span> <i class="bi bi-arrow-right-short fs-5"></i>
+            </button>
+        </form>
+
+        <div class="mt-4 pt-3 border-top border-secondary border-opacity-25 text-center">
+            <span class="text-muted small">For access assistance, contact your system administrator.</span>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

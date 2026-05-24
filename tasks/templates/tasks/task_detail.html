@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}Task Details: {{ task.task_name }}{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'task_list' %}" class="text-decoration-none">Tasks</a></li>
+    <li class="breadcrumb-item active" aria-current="page">#{{ task.id }} Details</li>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <!-- Header Actions -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="badge bg-secondary bg-opacity-25 text-dark small">ID #{{ task.id }}</span>
+                <span class="badge badge-custom status-{{ task.status }}">{{ task.get_status_display }}</span>
+                <span class="badge badge-custom priority-{{ task.priority }}">{{ task.get_priority_display }} Priority</span>
+            </div>
+            <h3 class="fw-bold m-0 text-slate-800">{{ task.task_name }}</h3>
+        </div>
+        
+        <div class="d-flex gap-2">
+            <a href="{% url 'task_list' %}" class="btn btn-outline-secondary d-flex align-items-center gap-1">
+                <i class="bi bi-arrow-left"></i> <span>Back</span>
+            </a>
+            {% if user.is_staff %}
+                <a href="{% url 'task_edit' task.pk %}" class="btn btn-primary d-flex align-items-center gap-1">
+                    <i class="bi bi-pencil-square"></i> <span>Edit</span>
+                </a>
+                <a href="{% url 'task_delete' task.pk %}" class="btn btn-danger d-flex align-items-center gap-1">
+                    <i class="bi bi-trash"></i> <span>Delete</span>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Task Primary Data -->
+        <div class="col-lg-8">
+            <!-- Metadata Cards Grid -->
+            <div class="card card-custom mb-4">
+                <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0">
+                    <h5 class="fw-bold m-0">Workflow Metadata</h5>
+                </div>
+                <div class="card-body px-4 pb-4 pt-2">
+                    <div class="row g-3">
+                        <div class="col-6 col-sm-4">
+                            <span class="text-muted small d-block">Vendor / Source</span>
+                            <span class="fw-semibold">{{ task.vendor_source }}</span>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                            <span class="text-muted small d-block">Country</span>
+                            <span class="fw-semibold"><i class="bi bi-geo-alt text-muted me-1"></i>{{ task.country }}</span>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                            <span class="text-muted small d-block">Category</span>
+                            <span class="fw-semibold text-capitalize">{{ task.get_category_display }}</span>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                            <span class="text-muted small d-block">Assigned Representative</span>
+                            {% if task.assigned_to %}
+                                <span class="fw-semibold text-primary"><i class="bi bi-person-fill me-1"></i>{{ task.assigned_to.username }}</span>
+                            {% else %}
+                                <span class="text-muted italic">Unassigned</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-6 col-sm-4">
+                            <span class="text-muted small d-block">Story Points</span>
+                            {% if task.story_points is not None %}
+                                <span class="fw-bold fs-5 text-primary">{{ task.story_points }}</span>
+                            {% else %}
+                                <span class="text-muted italic">Not Set</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-6 col-sm-4">
+                            <span class="text-muted small d-block">Deployment Link</span>
+                            {% if task.deployment_link %}
+                                <a href="{{ task.deployment_link }}" target="_blank" class="fw-semibold text-indigo d-inline-flex align-items-center gap-1">
+                                    <span>Visit Link</span> <i class="bi bi-box-arrow-up-right small"></i>
+                                </a>
+                            {% else %}
+                                <span class="text-muted italic">None</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes/Problems Card -->
+            <div class="card card-custom mb-4">
+                <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0">
+                    <h5 class="fw-bold m-0">Workflow Notes / Problem Details</h5>
+                </div>
+                <div class="card-body px-4 pb-4 pt-2">
+                    {% if task.notes %}
+                        <div class="bg-light p-3 rounded" style="white-space: pre-wrap; font-size: 0.9rem; line-height: 1.6;">{{ task.notes }}</div>
+                    {% else %}
+                        <p class="text-muted italic my-3 small text-center">No problems or operational notes are attached to this workflow.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Audit Log Card -->
+            <div class="card card-custom">
+                <div class="card-body p-3 small text-muted d-flex flex-wrap gap-4 bg-light bg-opacity-50">
+                    <div>
+                        <i class="bi bi-person-plus me-1"></i> Created by: <strong>{{ task.created_by.username }}</strong>
+                    </div>
+                    <div>
+                        <i class="bi bi-clock me-1"></i> Created: {{ task.created_at|date:"M d, Y g:i a" }}
+                    </div>
+                    <div>
+                        <i class="bi bi-arrow-clockwise me-1"></i> Last updated: {{ task.updated_at|date:"M d, Y g:i a" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workflow Status Sidebar -->
+        <div class="col-lg-4">
+            <div class="card card-custom h-100">
+                <div class="card-header bg-transparent border-0 pt-4 px-4 pb-2">
+                    <h5 class="fw-bold m-0"><i class="bi bi-signpost-split text-primary me-2"></i>Workflow Status</h5>
+                </div>
+                
+                <div class="card-body px-4 pb-4 pt-2">
+                    <!-- Visual Status Pipeline -->
+                    <div class="d-flex flex-column gap-2">
+                        {% with current_status=task.status %}
+                        
+                        {% comment %}Status pipeline steps{% endcomment %}
+                        {% for status_val, status_label in status_choices %}
+                            <div class="d-flex align-items-center gap-2 p-2 rounded {% if current_status == status_val %}bg-primary bg-opacity-10 border border-primary{% else %}bg-light{% endif %}">
+                                {% if current_status == status_val %}
+                                    <i class="bi bi-arrow-right-circle-fill text-primary"></i>
+                                {% elif forloop.counter0 < current_step %}
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                {% else %}
+                                    <i class="bi bi-circle text-muted"></i>
+                                {% endif %}
+                                <span class="small {% if current_status == status_val %}fw-bold text-primary{% else %}text-secondary{% endif %}">
+                                    {{ status_label }}
+                                </span>
+                            </div>
+                        {% endfor %}
+                        {% endwith %}
+                    </div>
+
+                    <hr class="my-3">
+
+                    <!-- Quick Info -->
+                    <div class="small text-muted">
+                        <div class="mb-2">
+                            <i class="bi bi-tag-fill me-1"></i>
+                            <strong>Category:</strong> {{ task.get_category_display }}
+                        </div>
+                        <div class="mb-2">
+                            <i class="bi bi-flag-fill me-1"></i>
+                            <strong>Priority:</strong>
+                            <span class="badge badge-custom priority-{{ task.priority }}">{{ task.get_priority_display }}</span>
+                        </div>
+                        {% if task.story_points is not None %}
+                        <div class="mb-2">
+                            <i class="bi bi-lightning-fill me-1"></i>
+                            <strong>Story Points:</strong> {{ task.story_points }}
+                        </div>
+                        {% endif %}
+                        {% if task.deployment_link %}
+                        <div>
+                            <i class="bi bi-link-45deg me-1"></i>
+                            <a href="{{ task.deployment_link }}" target="_blank" class="text-decoration-none">
+                                Deployment Link <i class="bi bi-box-arrow-up-right" style="font-size: 0.6rem;"></i>
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

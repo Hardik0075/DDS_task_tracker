@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Board{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item active" aria-current="page">Board</li>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    
+    <!-- Top Dashboard Header -->
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <div>
+            <span class="text-secondary small font-monospace">Projects / DDS workflows</span>
+            <h3 class="fw-bold m-0 text-slate-800">Workflow Board</h3>
+        </div>
+        
+        {% if user.is_staff %}
+        <a href="{% url 'task_create' %}" class="btn btn-primary d-flex align-items-center gap-1.5" style="border-radius: 3px;">
+            <i class="bi bi-plus-lg"></i>
+            <span>Create Task</span>
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- Filter Toolbar (Jira style) -->
+    <div class="d-flex flex-wrap gap-2 align-items-center mb-4 bg-white p-3 rounded shadow-sm border border-light">
+        <form method="get" action="{% url 'dashboard' %}" class="d-flex flex-wrap align-items-center gap-3 w-100">
+            <!-- Search Keyword -->
+            <div style="min-width: 200px; max-width: 300px; flex-grow: 1;">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-search"></i></span>
+                    <input type="text" name="q" value="{{ q }}" class="form-control bg-light border-start-0" placeholder="Search tasks..." aria-label="Search">
+                </div>
+            </div>
+
+            <!-- Assigned To Filter -->
+            <div class="d-flex align-items-center gap-2">
+                <label for="assigned-to-select" class="small fw-semibold text-secondary text-nowrap m-0">Assignee:</label>
+                <select id="assigned-to-select" name="assigned_to" class="form-select form-select-sm bg-light" style="width: 160px;" onchange="this.form.submit()">
+                    <option value="">All Assignees</option>
+                    {% for u in team_users %}
+                        <option value="{{ u.id }}" {% if selected_assignee == u.id|stringformat:"i" %}selected{% endif %}>{{ u.username|capfirst }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Priority Filter -->
+            <div class="d-flex align-items-center gap-2">
+                <label for="priority-select" class="small fw-semibold text-secondary text-nowrap m-0">Priority:</label>
+                <select id="priority-select" name="priority" class="form-select form-select-sm bg-light" style="width: 140px;" onchange="this.form.submit()">
+                    <option value="">All Priorities</option>
+                    {% for value, label in priority_choices %}
+                        <option value="{{ value }}" {% if selected_priority == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Predefined Avatars display (Jira style) -->
+            <div class="d-none d-lg-flex align-items-center gap-1 ms-auto">
+                <span class="small text-muted me-2">Predefined Team:</span>
+                {% for u in team_users %}
+                    <div class="avatar-circle avatar-{{ u.username }} shadow-sm" title="{{ u.username|capfirst }}">
+                        {{ u.username|slice:":1" }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="d-flex gap-1.5">
+                <button type="submit" class="btn btn-sm btn-primary px-3">Filter</button>
+                <a href="{% url 'dashboard' %}" class="btn btn-sm btn-outline-secondary">Clear</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- KANBAN BOARD CONTAINER -->
+    <div class="kanban-board">
+        {% for column in board_data %}
+            <div class="kanban-column col-header-{{ column.value }}">
+                <div class="kanban-column-header">
+                    <h6 class="kanban-column-title">
+                        {{ column.label }}
+                        <span class="badge bg-secondary text-dark rounded-circle ms-1">{{ column.tasks|length }}</span>
+                    </h6>
+                </div>
+                
+                <div class="kanban-task-list">
+                    {% for task in column.tasks %}
+                        <!-- Card with color styling class per assigned user -->
+                        <a href="{% url 'task_detail' task.pk %}" class="kanban-card card-user-{{ task.assigned_to.username|default:'unassigned' }}">
+                            
+                            <!-- Task Name -->
+                            <div class="kanban-card-title fw-semibold">{{ task.task_name }}</div>
+                            
+                            <div class="small text-secondary mb-2" style="font-size: 0.75rem;">
+                                <i class="bi bi-tag me-0.5"></i>{{ task.vendor_source }} • <span class="fw-medium text-dark">{{ task.country }}</span>
+                            </div>
+
+                            <!-- Meta line -->
+                            <div class="kanban-card-meta">
+                                <span class="font-monospace fw-bold text-secondary" style="font-size: 0.75rem;">
+                                    DDS-{{ task.id }}
+                                </span>
+                                
+                                <div class="d-flex align-items-center gap-2">
+                                    <!-- Story Points badge -->
+                                    {% if task.story_points is not None %}
+                                        <span class="kanban-story-points" title="Story Points">
+                                            {{ task.story_points }}
+                                        </span>
+                                    {% endif %}
+
+                                    <!-- Priority indicator -->
+                                    <span class="badge badge-custom priority-{{ task.priority }}" style="font-size: 0.65rem;">
+                                        {{ task.get_priority_display }}
+                                    </span>
+
+                                    <!-- Avatar initials circle -->
+                                    <div class="avatar-circle avatar-{{ task.assigned_to.username|default:'unassigned' }}" 
+                                         title="Assigned to: {{ task.assigned_to.username|default:'Unassigned'|capfirst }}">
+                                        {{ task.assigned_to.username|default:'?'|slice:":1" }}
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    {% empty %}
+                        <div class="text-center py-5 text-muted small border border-dashed rounded bg-white bg-opacity-40">
+                            No tasks
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

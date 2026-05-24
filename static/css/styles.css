@@ -1,0 +1,361 @@
+/* Google Fonts Integration */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #0052cc;      /* Jira Blue */
+    --primary-hover: #0747a6;      /* Darker Jira Blue */
+    --secondary-color: #64748b;    /* Slate 500 */
+    --bg-main: #f4f5f7;            /* Jira Light gray */
+    --sidebar-bg: #0747a6;         /* Primary Darker Blue */
+    --sidebar-text: #deebff;       /* Soft blue-white */
+    --sidebar-hover: #0052cc;      /* Sidebar Hover */
+    --card-border: #dfe1e6;        /* Slate border */
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-main);
+    color: #172b4d;
+    overflow-x: hidden;
+}
+
+/* Base Layout Wrapper */
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Navigation */
+.sidebar {
+    width: 240px;
+    background-color: var(--sidebar-bg);
+    color: #ffffff;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.05);
+    z-index: 100;
+}
+
+.sidebar .brand {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.sidebar .brand span {
+    color: #deebff;
+}
+
+.sidebar .nav-link {
+    color: var(--sidebar-text);
+    font-weight: 500;
+    font-size: 0.925rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 4px;
+    margin: 0.25rem 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.sidebar .nav-link:hover {
+    color: #ffffff;
+    background-color: var(--sidebar-hover);
+}
+
+.sidebar .nav-link.active {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Main Content Area */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.top-navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--card-border);
+    padding: 0.75rem 1.5rem;
+}
+
+.content-body {
+    padding: 1.5rem;
+    flex-grow: 1;
+}
+
+/* Card Styling */
+.card-custom {
+    background: #ffffff;
+    border: 1px solid var(--card-border);
+    border-radius: 3px;
+    box-shadow: 0 1px 1px rgba(9, 30, 66, 0.25);
+}
+
+/* Custom badges */
+.badge-custom {
+    padding: 0.25em 0.5em;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* Refined Color Badges for Priorities */
+.priority-low {
+    background-color: #deebff;
+    color: #0747a6;
+}
+.priority-medium {
+    background-color: #fff0b3;
+    color: #172b4d;
+}
+.priority-high {
+    background-color: #ffebd5;
+    color: #c2410c;
+}
+.priority-critical {
+    background-color: #ffebe6;
+    color: #bf2600;
+    border: 1px solid #ffbdad;
+}
+
+/* Refined Color Badges for Statuses */
+.status-to_do            { background-color: #dfe1e6; color: #172b4d; }
+.status-in_progress      { background-color: #deebff; color: #0747a6; }
+.status-under_validation { background-color: #eae6ff; color: #403294; }
+.status-deployed_stage   { background-color: #fff0b3; color: #7a5200; }
+.status-deployed_prod    { background-color: #c3f0d5; color: #004a30; border: 1px solid #79e2a8; }
+.status-done             { background-color: #e3fcef; color: #006644; border: 1px solid #abf5d1; font-weight: 700; }
+.status-blocked          { background-color: #ffebe6; color: #bf2600; border: 1px solid #ffbdad; }
+
+/* Column header left-border color accents per status */
+.col-header-to_do            { border-top: 3px solid #b0bec5; }
+.col-header-in_progress      { border-top: 3px solid #0052cc; }
+.col-header-under_validation { border-top: 3px solid #8777d9; }
+.col-header-deployed_stage   { border-top: 3px solid #f6c90e; }
+.col-header-deployed_prod    { border-top: 3px solid #36b37e; }
+.col-header-done             { border-top: 3px solid #00875a; }
+.col-header-blocked          { border-top: 3px solid #de350b; }
+
+/* Custom Table Design */
+.table-custom {
+    margin-bottom: 0;
+}
+.table-custom th {
+    background-color: #f4f5f7;
+    color: #5e6c84;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    padding: 0.65rem 0.85rem;
+    border-bottom: 2px solid #dfe1e6;
+}
+.table-custom td {
+    padding: 0.65rem 0.85rem;
+    vertical-align: middle;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #dfe1e6;
+}
+
+/* Kanban Board Layout (Jira Board Style) */
+.kanban-board {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    align-items: flex-start;
+}
+
+.kanban-column {
+    flex: 1 1 0;
+    min-width: 270px;
+    background-color: #f4f5f7;
+    border-radius: 3px;
+    padding: 0.65rem;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.kanban-column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding: 0.25rem;
+}
+
+.kanban-column-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #5e6c84;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.kanban-task-list {
+    overflow-y: auto;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-height: 150px;
+    padding: 0.15rem;
+}
+
+.kanban-card {
+    background: #ffffff;
+    border-radius: 3px;
+    padding: 0.75rem;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 1px 2px rgba(9, 30, 66, 0.2);
+    transition: box-shadow 0.15s ease, transform 0.1s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.kanban-card:hover {
+    box-shadow: 0 4px 8px -2px rgba(9, 30, 66, 0.25), 0 0 1px rgba(9, 30, 66, 0.31);
+    transform: translateY(-1px);
+    color: inherit;
+}
+
+.kanban-card-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #172b4d;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.kanban-card-meta {
+    font-size: 0.75rem;
+    color: #5e6c84;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+
+.kanban-story-points {
+    background-color: #dfe1e6;
+    color: #172b4d;
+    font-weight: 600;
+    font-size: 0.7rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+/* User-Specific Card Coloring formulas */
+.card-user-hardik {
+    background-color: #e8f5e9 !important; /* Soft Green */
+    border-left: 5px solid #2e7d32 !important;
+}
+.card-user-aryan {
+    background-color: #e3f2fd !important; /* Soft Blue */
+    border-left: 5px solid #1565c0 !important;
+}
+.card-user-harish {
+    background-color: #fff3e0 !important; /* Soft Orange */
+    border-left: 5px solid #e65100 !important;
+}
+.card-user-rasika {
+    background-color: #f3e5f5 !important; /* Soft Purple */
+    border-left: 5px solid #7b1fa2 !important;
+}
+.card-user-unassigned {
+    background-color: #ffffff !important; /* Standard White */
+    border-left: 5px solid #64748b !important;
+}
+
+/* Login Template Layout */
+.login-bg {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0747a6;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-card {
+    background: #ffffff;
+    border-radius: 4px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    color: #172b4d;
+    z-index: 10;
+}
+
+.login-card .form-control {
+    background-color: #fafbfc;
+    border: 1px solid #dfe1e6;
+    color: #172b4d;
+    border-radius: 3px;
+}
+
+.login-card .form-control:focus {
+    background-color: #ffffff;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 82, 204, 0.2);
+}
+
+.login-card .btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+    font-weight: 600;
+    border-radius: 3px;
+}
+
+.login-card .btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+/* User avatar placeholder */
+.avatar-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.avatar-hardik { background-color: #2e7d32; }
+.avatar-aryan { background-color: #1565c0; }
+.avatar-harish { background-color: #e65100; }
+.avatar-rasika { background-color: #7b1fa2; }
+.avatar-unassigned { background-color: #64748b; }
+
+/* Responsive sidebars toggler */
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+    }
+    .content-body {
+        padding: 1rem;
+    }
+}
